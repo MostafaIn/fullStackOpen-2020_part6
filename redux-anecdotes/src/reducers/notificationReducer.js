@@ -1,14 +1,19 @@
 
 
+let timeOutID
 export const setNotification = (msg, time) => {
+    console.log(timeOutID)
+    if(timeOutID){
+       clearTimeout(timeOutID)
+    }
     return async dispatch => {
-        setTimeout(() => {
+        timeOutID = setTimeout(() => {
             dispatch({
                 type: 'NOTIFICATION',
                 data: ''
             });
         }, time * 500);
-
+        
         dispatch({
             type: 'NOTIFICATION',
             data: msg
