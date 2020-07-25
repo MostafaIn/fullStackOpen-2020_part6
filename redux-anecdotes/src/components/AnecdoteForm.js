@@ -12,12 +12,10 @@ const AnecdoteForm = () => {
         e.target.anecdote.value = ''
         if(content){
             dispatch(createAnecdote(content))
-            dispatch(setNotification(`"${content}" is added!`))
+            dispatch(setNotification(`"${content}" is added!`, 10))
         }else{
-            dispatch(setNotification('please Enter your anecdote !'))
+            dispatch(setNotification('please Enter your anecdote !', 10))
         }
-
-        setTimeout(() => dispatch(setNotification(null)), 5000);
       }
 
     return (
