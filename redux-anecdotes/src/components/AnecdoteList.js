@@ -1,25 +1,18 @@
 import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { addVote } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
-const AnecdoteList = () => {
-    const anecdotes = useSelector(({ anecdotes, filter }) => {
-        return (!filter) ?
-            anecdotes
-            : 
-            anecdotes.filter(an => an.content.toLowerCase().includes(filter.toLowerCase()))
-    })
-    const dispatch = useDispatch()
+const AnecdoteList = (props) => {
 
     const vote = (anecdote) => {
-        dispatch(addVote(anecdote))
-        dispatch(setNotification(`you voted "${anecdote.content}"`, 10))
+        props.addVote(anecdote)
+        props.setNotification(`you voted "${anecdote.content}"`, 10)
     }
 
     return (
         <div>
-            {anecdotes.sort((a, b) => b.votes - a.votes).map(anecdote =>
+            {props.anecdotes.sort((a, b) => b.votes - a.votes).map(anecdote =>
                 <div key={anecdote.id}>
                 <div>
                     {anecdote.content}
@@ -34,4 +27,21 @@ const AnecdoteList = () => {
     )
 }
 
-export default AnecdoteList
+const mapStateToProps = state => {
+    if(!state.filter){
+        return { anecdotes: state.anecdotes }
+    }else{
+        return {
+            anecdotes: state.anecdotes.filter(an => an.content.toLowerCase().includes(state.filter.toLowerCase()))
+        }
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        addVote: value => dispatch(addVote(value)),
+        setNotification: (msg, time) => dispatch(setNotification(msg, time))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AnecdoteList)
